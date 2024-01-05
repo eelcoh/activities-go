@@ -10,13 +10,19 @@ import (
 )
 
 func getActivtities(ctx context.Context) ([]StoredActivity, error) {
+	log.Println("Get activtities - 1")
+
 	query := client.Collection("Activities")
+	log.Println("Get activtities - 2")
 	iter := query.Documents(ctx)
+	log.Println("Get activtities - 3")
 
 	var a StoredActivity
+	log.Println("Get activtities - 4")
 	var activities []StoredActivity
 	for {
 		doc, err := iter.Next()
+		log.Println("Get activtities - 5")
 		if err == iterator.Done {
 			break
 		}
@@ -25,6 +31,8 @@ func getActivtities(ctx context.Context) ([]StoredActivity, error) {
 		}
 
 		err = doc.DataTo(&a)
+		log.Println("Get activtities - 6")
+
 		if err != nil {
 			return nil, err
 		}
@@ -57,8 +65,12 @@ func getActivity(ctx context.Context, uid string) (*StoredActivity, error) {
 }
 
 func storeActivity(activityType string, activity Activity) (*StoredActivity, error) {
+	log.Println("Store activtity - 1")
+
 	var storedActivity *StoredActivity
+	log.Println("Store activtity - 2")
 	var act *StoredActivity
+	log.Println("Store activtity - 3")
 
 	uu, err := uuid.NewV4()
 
@@ -75,13 +87,17 @@ func storeActivity(activityType string, activity Activity) (*StoredActivity, err
 	storedActivity.Activity = activity
 	storedActivity.ID = uid
 
+	log.Println("Store activtity - 4")
 	activities := client.Collection("activities")
+	log.Println("Store activtity - 5")
 	doc := activities.Doc(uid)
+	log.Println("Store activtity - 6")
 
 	_, err = doc.Create(ctx, storedActivity)
+	log.Println("Store activtity - 7")
 
 	if err != nil {
-		log.Fatalf("Failed adding alovelace: %v", err)
+		log.Fatalf("Failed adding document: %v", err)
 		return act, err
 	}
 
