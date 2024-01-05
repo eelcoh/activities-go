@@ -67,7 +67,7 @@ func getActivity(ctx context.Context, uid string) (*StoredActivity, error) {
 func storeActivity(activityType string, activity Activity) (*StoredActivity, error) {
 	log.Println("Store activtity - 1")
 
-	var storedActivity *StoredActivity
+	var storedActivity StoredActivity
 	log.Println("Store activtity - 2")
 	var act *StoredActivity
 	log.Println("Store activtity - 3")
@@ -80,11 +80,19 @@ func storeActivity(activityType string, activity Activity) (*StoredActivity, err
 
 	uid := uu.String()
 
-	activity = activity.SetUUID(uid)
-	// activityID := bson.NewObjectId()
-
-	storedActivity.ActivityType = activityType
+	log.Println("Store activtity - 3a")
+	log.Printf(" activityType : %s", activity)
+	log.Println("Store activtity - 3aia")
 	storedActivity.Activity = activity
+
+	log.Println("Store activtity - 3b")
+	log.Printf(" activityType : %s", activityType)
+	log.Println("Store activtity - 3b")
+	log.Println("Store activtity - 3c")
+	storedActivity.ActivityType = activityType
+	log.Println("Store activtity - 3c")
+	activity = activity.SetUUID(uid)
+	log.Println("Store activtity - 3d")
 	storedActivity.ID = uid
 
 	log.Println("Store activtity - 4")
@@ -101,19 +109,19 @@ func storeActivity(activityType string, activity Activity) (*StoredActivity, err
 		return act, err
 	}
 
-	return storedActivity, nil
+	return &storedActivity, nil
 }
 
 func updateActivity(storedActivity *StoredActivity) (*StoredActivity, error) {
 
-	var act *StoredActivity
+	var act StoredActivity
 
 	activities := client.Collection("activities")
 	doc := activities.Doc(storedActivity.ID)
 
 	_, err := doc.Set(ctx, storedActivity)
 	if err != nil {
-		return act, nil
+		return &act, nil
 	}
 	return storedActivity, nil
 
