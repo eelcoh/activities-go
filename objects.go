@@ -38,7 +38,7 @@ func getActivtities(ctx context.Context) ([]StoredActivity, error) {
 		}
 		newActivities = append(newActivities, a)
 	}
-	return activities, nil
+	return newActivities, nil
 
 }
 
@@ -102,6 +102,30 @@ func storeActivity(activityType string, activity Activity) (*StoredActivity, err
 	}
 
 	return storedActivity, nil
+}
+
+func storeComment(activityType string, comment Comment) (*Comment, error) {
+	log.Println("Store activtity - 1")
+
+	log.Println("Store activtity - 2")
+	var act *Comment
+	log.Println("Store activtity - 3")
+
+	log.Println("Store activtity - 4")
+	activities := client.Collection("activities")
+	log.Println("Store activtity - 5")
+	doc := activities.Doc(comment.GetUUID())
+	log.Println("Store activtity - 6")
+
+	_, err := doc.Create(ctx, comment)
+	log.Println("Store activtity - 7")
+
+	if err != nil {
+		log.Fatalf("Failed adding document: %v", err)
+		return act, err
+	}
+
+	return &comment, nil
 }
 
 func updateActivity(storedActivity *StoredActivity) (*StoredActivity, error) {
