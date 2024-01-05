@@ -12,14 +12,14 @@ import (
 func getActivtities(ctx context.Context) ([]StoredActivity, error) {
 	log.Println("Get activtities - 1")
 
-	query := client.Collection("Activities")
+	activities := client.Collection("Activities")
 	log.Println("Get activtities - 2")
-	iter := query.Documents(ctx)
+	iter := activities.Documents(ctx)
 	log.Println("Get activtities - 3")
 
 	var a StoredActivity
 	log.Println("Get activtities - 4")
-	var activities []StoredActivity
+	var newActivities []StoredActivity
 	for {
 		doc, err := iter.Next()
 		log.Println("Get activtities - 5")
@@ -36,7 +36,7 @@ func getActivtities(ctx context.Context) ([]StoredActivity, error) {
 		if err != nil {
 			return nil, err
 		}
-		activities = append(activities, a)
+		newActivities = append(newActivities, a)
 	}
 	return activities, nil
 
