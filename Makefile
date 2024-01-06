@@ -24,7 +24,7 @@ image:
 	docker build --tag $(GOKARNA) .
 
 togokarna:
-	docker push $(TAG)
+	docker push $(GOKARNA)
 
 pull: 
 	docker pull $(GOKARNA)

@@ -128,8 +128,17 @@ func storeComment(activityType string, comment Comment) (*Comment, error) {
 	log.Printf("doc: %s", doc)
 	log.Println("Store comment - 8")
 
-	_, err := doc.Create(ctx, comment)
+	type State struct {
+		Capital    string  `firestore:"capital"`
+		Population float64 `firestore:"pop"` // in millions
+	}
+	// _, err := doc.Create(ctx, comment)
+	wr, err := doc.Create(ctx, State{
+		Capital:    "Albany",
+		Population: 19.8,
+	})
 	log.Println("Store comment - 9")
+	log.Printf("comment: %s", wr)
 
 	if err != nil {
 		log.Fatalf("Failed adding document: %v", err)
