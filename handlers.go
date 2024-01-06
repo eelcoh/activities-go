@@ -21,16 +21,16 @@ func retrieveActivities(w http.ResponseWriter, r *http.Request) {
 	var activitiesWrapper Activities
 
 	log.Println("Retrieve activtities - before")
-	storedActivities, err := getActivtities(ctx)
+	activities, err := getActivtities(ctx)
 	log.Println("Retrieve activtities - after")
 
 	if err != nil {
 		http.Error(w, "whoops - activities not found", 503)
 	}
 
-	for _, act := range storedActivities {
-		activities = append(activities, act.Activity)
-	}
+	// for _, act := range storedActivities {
+	// 	activities = append(activities, act)
+	// }
 
 	activitiesWrapper.Activities = activities
 
@@ -56,7 +56,7 @@ func retrieveActivity(w http.ResponseWriter, r *http.Request, activityType strin
 	params := mux.Vars(r)
 	uid := params["actUUID"]
 
-	var activity *StoredActivity
+	var activity *Activity
 	activity, err := getActivity(ctx, uid)
 
 	if err != nil {
@@ -69,12 +69,12 @@ func retrieveActivity(w http.ResponseWriter, r *http.Request, activityType strin
 		http.NotFound(w, r)
 	}
 
-	if activity.Activity.GetType() != activityType {
+	if (*activity).GetType() != activityType {
 		http.Error(w, "Incorrect activity type", 403)
 		return
 	}
 
-	returnActivity(w, r, activity.Activity)
+	returnActivity(w, r, *activity)
 
 }
 
@@ -175,7 +175,7 @@ func updateBlog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	storedBlog, err := getActivity(ctx, uid)
+	storedBlog, err := getBlog(ctx, uid)
 
 	if err != nil {
 		http.Error(w, err.Error(), 404)
@@ -189,11 +189,11 @@ func updateBlog(w http.ResponseWriter, r *http.Request) {
 
 	var blog Blog
 
-	blog = storedBlog.Activity.(Blog)
+	// blog = &storedBlog
 
-	blog.Title = authBlog.Title
-	blog.Author = authBlog.Author
-	blog.Msg = authBlog.Msg
+	storedBlog.Title = authBlog.Title
+	storedBlog.Author = authBlog.Author
+	storedBlog.Msg = authBlog.Msg
 
 	fmt.Println(blog.Msg)
 
@@ -203,10 +203,10 @@ func updateBlog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	storedBlog.Activity = blog
+	// storedBlog.Activity = blog
 	updatedBlog, err := updateActivity(storedBlog)
 	if err != nil {
-		returnActivity(w, r, updatedBlog.Activity)
+		returnActivity(w, r, *updatedBlog)
 
 	}
 }
@@ -286,12 +286,12 @@ func updateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if newActivity.ActivityType != "comment" {
+	if (*newActivity).GetType() != "comment" {
 		http.Error(w, "Incorrect activity type", 403)
 		return
 	}
 
-	newComment, ok := newActivity.Activity.(Comment)
+	newComment, ok := (*newActivity).(Comment)
 	if !ok {
 		http.Error(w, "Incorrect activity type", 403)
 		return
@@ -303,9 +303,9 @@ func updateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newActivity.Activity = newComment
+	// newActivity = newComment
 
-	_, err = updateActivity(newActivity)
+	_, err = updateActivity(newComment)
 	if err != nil {
 		http.Error(w, err.Error(), 504)
 		return
