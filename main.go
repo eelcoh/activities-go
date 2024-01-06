@@ -33,7 +33,7 @@ func init() {
 	if err != nil {
 		log.Fatalf("Error initializing Cloud Firestore client: %v", err)
 	}
-	defer client.Close()
+	// defer client.Close()
 
 	fmt.Println("initialising environment variables")
 
