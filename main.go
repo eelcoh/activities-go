@@ -29,7 +29,7 @@ func init() {
 	var err error
 
 	ctx := context.Background()
-	client, err = firestore.NewClient(ctx, "\"Filled in at lab startup\"")
+	client, err := firestore.NewClient(ctx, "projectID")
 	if err != nil {
 		log.Fatalf("Error initializing Cloud Firestore client: %v", err)
 	}
