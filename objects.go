@@ -109,35 +109,13 @@ func storeActivity(activityType string, activity Activity) (*StoredActivity, err
 }
 
 func storeComment(activityType string, comment Comment) (*Comment, error) {
-	log.Println("Store comment - 1")
-
-	log.Println("Store comment - 2")
 	var act *Comment
-	log.Println("Store comment - 3")
-
-	log.Println("Store comment - 4")
 	activities := client.Collection("activities")
 
-	log.Println("Store comment - 5")
 	doc := activities.Doc(comment.GetUUID())
 
-	log.Println("Store comment - 6")
-	log.Printf("comment: %s", comment)
-	log.Println("Store comment - 7")
+	wr, err := doc.Create(ctx, comment)
 
-	log.Printf("doc: %s", doc)
-	log.Println("Store comment - 8")
-
-	type State struct {
-		Capital    string  `firestore:"capital"`
-		Population float64 `firestore:"pop"` // in millions
-	}
-	// _, err := doc.Create(ctx, comment)
-	wr, err := doc.Create(ctx, State{
-		Capital:    "Albany",
-		Population: 19.8,
-	})
-	log.Println("Store comment - 9")
 	log.Printf("comment: %s", wr)
 
 	if err != nil {
