@@ -7,8 +7,8 @@ TAG = europe-west4-docker.pkg.dev/websites-394411/webstekjes/activities:$(VER)
 GOKARNA = gokarna:5000/activities
 # gokarna : TAG = gokarna:5000/activities:$(VER)
 
-makelinux: linux gokarna pushgokarna
-pushgoogle: pull tag push
+gokarna: linux image togokarna
+google: pull tag push
 
 # gokarna: linux docker push
 
@@ -20,14 +20,14 @@ docker:
 	# @echo $(TAG)
 	docker build --tag $(TAG) . 
 
-gokarna: 
-	docker build --tag $(GOKARNA)
+image: 
+	docker build --tag $(GOKARNA) .
 
-pushgokarna:
+togokarna:
 	docker push $(TAG)
 
 pull: 
-	docker pull $(GOKARNA))
+	docker pull $(GOKARNA)
 
 tag: 
 	docker image tag $(GOKARNA) $(TAG)
@@ -35,7 +35,7 @@ tag:
 push:
 	docker push $(TAG)
 
-mac:
+local:
 	go build
 
 clean:

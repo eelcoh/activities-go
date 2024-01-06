@@ -92,9 +92,13 @@ func storeActivity(activityType string, activity Activity) (*StoredActivity, err
 	log.Println("Store activtity - 5")
 	doc := activities.Doc(uid)
 	log.Println("Store activtity - 6")
-
-	_, err = doc.Create(ctx, storedActivity)
+	log.Printf("activity: %s", storedActivity)
 	log.Println("Store activtity - 7")
+
+	log.Printf("doc: %s", doc)
+	log.Println("Store activtity - 8")
+	_, err = doc.Create(ctx, storedActivity)
+	log.Println("Store activtity - 9")
 
 	if err != nil {
 		log.Fatalf("Failed adding document: %v", err)
@@ -113,12 +117,19 @@ func storeComment(activityType string, comment Comment) (*Comment, error) {
 
 	log.Println("Store comment - 4")
 	activities := client.Collection("activities")
+
 	log.Println("Store comment - 5")
 	doc := activities.Doc(comment.GetUUID())
+
 	log.Println("Store comment - 6")
+	log.Printf("comment: %s", comment)
+	log.Println("Store comment - 7")
+
+	log.Printf("doc: %s", doc)
+	log.Println("Store comment - 8")
 
 	_, err := doc.Create(ctx, comment)
-	log.Println("Store comment - 7")
+	log.Println("Store comment - 9")
 
 	if err != nil {
 		log.Fatalf("Failed adding document: %v", err)
