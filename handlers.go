@@ -250,7 +250,7 @@ func newComment(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("New comment - 3")
 
-	_, err = storeComment("comment", comment)
+	_, err = storeActivity("comment", comment)
 	log.Println("New comment - 4")
 
 	if err != nil {
