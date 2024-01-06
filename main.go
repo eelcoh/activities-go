@@ -26,13 +26,6 @@ func init() {
 
 	fmt.Println("initialising firestore")
 
-	var err error
-
-	ctx := context.Background()
-	client, err := firestore.NewClient(ctx, "websites-394411")
-	if err != nil {
-		log.Fatalf("Error initializing Cloud Firestore client: %v", err)
-	}
 	// defer client.Close()
 
 	fmt.Println("initialising environment variables")
@@ -40,6 +33,13 @@ func init() {
 	signingKey = os.Getenv("SIGNINGKEY")
 
 	passphrase = os.Getenv("PASSPHRASE")
+	var err error
+	ctx = context.Background()
+
+	client, err = firestore.NewClient(ctx, "websites-394411")
+	if err != nil {
+		log.Fatalf("Error initializing Cloud Firestore client: %v", err)
+	}
 
 }
 
