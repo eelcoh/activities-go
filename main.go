@@ -18,6 +18,7 @@ var db_name string
 
 var signingKey string
 var passphrase string
+var projectid string
 
 var ctx context.Context
 var client *firestore.Client
@@ -33,10 +34,14 @@ func init() {
 	signingKey = os.Getenv("SIGNINGKEY")
 
 	passphrase = os.Getenv("PASSPHRASE")
+
 	var err error
+
+	projectid = os.Getenv("PROJECTID")
+
 	ctx = context.Background()
 
-	client, err = firestore.NewClient(ctx, "websites-394411")
+	client, err = firestore.NewClient(ctx, projectid)
 	if err != nil {
 		log.Fatalf("Error initializing Cloud Firestore client: %v", err)
 	}
