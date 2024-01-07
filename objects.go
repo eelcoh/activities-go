@@ -24,20 +24,27 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 		doc, err := iter.Next()
 		log.Println("Get activtities - 5")
 		if err == iterator.Done {
+			log.Println("Get activtities DONE")
 			break
 		}
 		if err != nil {
+			log.Printf("Get activtities ERR-1 %s", err)
 			return nil, err
 		}
 
 		err = doc.DataTo(&a)
+
 		log.Println("Get activtities - 6")
 
 		if err != nil {
+			log.Printf("Get activtities ERR-2 %s", err)
 			return nil, err
 		}
+		log.Printf("Get activtities DOC %s", a)
 		newActivities = append(newActivities, a)
 	}
+	log.Printf("Get activtities ACTS %s", newActivities)
+
 	return newActivities, nil
 
 }
