@@ -17,7 +17,10 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 	iter := activities.Documents(ctx)
 	log.Println("Get activtities - 3")
 
-	var a Activity
+	// var a Activity
+	var m map[string]interface{}
+	var c Comment
+
 	log.Println("Get activtities - 4")
 	newActivities := make([]Activity, 0)
 	for {
@@ -33,17 +36,19 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 		}
 
 		log.Printf("Get activtities DOC %s", doc.Data())
+		m = doc.Data()
+		if m["type"] == "comment" {
+			err = doc.DataTo(&c)
 
-		err = doc.DataTo(&a)
+			log.Println("Get activtities - 6")
 
-		log.Println("Get activtities - 6")
-
-		if err != nil {
-			log.Printf("Get activtities ERR-2 %s", err)
-			return nil, err
-		} else {
-			log.Printf("Get activtities DOC %s", a)
-			newActivities = append(newActivities, a)
+			if err != nil {
+				log.Printf("Get activtities ERR-2 %s", err)
+				return nil, err
+			} else {
+				log.Printf("Get activtities DOC %s", c.Msg)
+				newActivities = append(newActivities, c)
+			}
 		}
 	}
 	log.Printf("Get activtities ACTS %s", newActivities)
