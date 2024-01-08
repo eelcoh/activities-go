@@ -19,7 +19,7 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 
 	var a Activity
 	log.Println("Get activtities - 4")
-	var newActivities []Activity
+	newActivities := make([]Activity, 0)
 	for {
 		doc, err := iter.Next()
 		log.Println("Get activtities - 5")
