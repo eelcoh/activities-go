@@ -32,6 +32,8 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 			return nil, err
 		}
 
+		log.Printf("Get activtities DOC %s", doc.Data())
+
 		err = doc.DataTo(&a)
 
 		log.Println("Get activtities - 6")
@@ -39,9 +41,10 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 		if err != nil {
 			log.Printf("Get activtities ERR-2 %s", err)
 			return nil, err
+		} else {
+			log.Printf("Get activtities DOC %s", a)
+			newActivities = append(newActivities, a)
 		}
-		log.Printf("Get activtities DOC %s", a)
-		newActivities = append(newActivities, a)
 	}
 	log.Printf("Get activtities ACTS %s", newActivities)
 
