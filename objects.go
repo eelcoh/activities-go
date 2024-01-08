@@ -19,7 +19,6 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 
 	// var a Activity
 	var m map[string]interface{}
-	var c Comment
 
 	log.Println("Get activtities - 4")
 	newActivities := make([]Activity, 0)
@@ -38,6 +37,8 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 		log.Printf("Get activtities DOC %s", doc.Data())
 		m = doc.Data()
 		if m["type"] == "comment" {
+			var c Comment
+
 			err = doc.DataTo(&c)
 
 			log.Println("Get activtities - 6")
