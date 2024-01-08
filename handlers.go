@@ -20,9 +20,7 @@ func retrieveActivities(w http.ResponseWriter, r *http.Request) {
 
 	var activitiesWrapper Activities
 
-	log.Println("Retrieve activtities - before")
 	activities, err := getActivtities(ctx)
-	log.Println("Retrieve activtities - after")
 
 	if err != nil {
 		http.Error(w, "whoops - activities not found", 503)
@@ -232,7 +230,6 @@ func newComment(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 403)
 		return
 	}
-	log.Println("New comment - 1")
 
 	comment := Comment{
 		Meta:         meta,
@@ -242,16 +239,13 @@ func newComment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = validateComment(comment)
-	log.Println("New comment - 2")
 
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	log.Println("New comment - 3")
 
 	_, err = storeActivity("comment", comment)
-	log.Println("New comment - 4")
 
 	if err != nil {
 		http.Error(w, err.Error(), 504)

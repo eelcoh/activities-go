@@ -10,23 +10,17 @@ import (
 )
 
 func getActivtities(ctx context.Context) ([]Activity, error) {
-	log.Println("Get activtities - 1")
 
 	activities := client.Collection("activities")
-	log.Println("Get activtities - 2")
 	iter := activities.Documents(ctx)
-	log.Println("Get activtities - 3")
 
 	// var a Activity
 	var m map[string]interface{}
 
-	log.Println("Get activtities - 4")
 	newActivities := make([]Activity, 0)
 	for {
 		doc, err := iter.Next()
-		log.Println("Get activtities - 5")
 		if err == iterator.Done {
-			log.Println("Get activtities DONE")
 			break
 		}
 		if err != nil {
@@ -34,25 +28,19 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 			return nil, err
 		}
 
-		log.Printf("Get activtities DOC %s", doc.Data())
 		m = doc.Data()
 		if m["type"] == "comment" {
 			var c Comment
 
 			err = doc.DataTo(&c)
 
-			log.Println("Get activtities - 6")
-
 			if err != nil {
 				log.Printf("Get activtities ERR-2 %s", err)
-				return nil, err
 			} else {
-				log.Printf("Get activtities DOC %s", c.Msg)
 				newActivities = append(newActivities, c)
 			}
 		}
 	}
-	log.Printf("Get activtities ACTS %s", newActivities)
 
 	return newActivities, nil
 
