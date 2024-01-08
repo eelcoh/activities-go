@@ -12,7 +12,7 @@ import (
 func getActivtities(ctx context.Context) ([]Activity, error) {
 	log.Println("Get activtities - 1")
 
-	activities := client.Collection("Activities")
+	activities := client.Collection("activities")
 	log.Println("Get activtities - 2")
 	iter := activities.Documents(ctx)
 	log.Println("Get activtities - 3")
@@ -50,7 +50,7 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 }
 
 func getActivity(ctx context.Context, uid string) (*Activity, error) {
-	query := client.Collection("Activities").Where("meta.uuid", "==", uid)
+	query := client.Collection("activities").Where("meta.uuid", "==", uid)
 	iter := query.Documents(ctx)
 
 	var a Activity
@@ -72,7 +72,7 @@ func getActivity(ctx context.Context, uid string) (*Activity, error) {
 }
 
 func getBlog(ctx context.Context, uid string) (*Blog, error) {
-	query := client.Collection("Activities").Where("meta.uuid", "==", uid)
+	query := client.Collection("activities").Where("meta.uuid", "==", uid)
 	iter := query.Documents(ctx)
 
 	var a Blog
