@@ -14,7 +14,6 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 	activities := client.Collection("activities")
 	iter := activities.Documents(ctx)
 
-	// var a Activity
 	var m map[string]interface{}
 
 	newActivities := make([]Activity, 0)
@@ -90,41 +89,6 @@ func getBlog(ctx context.Context, uid string) (*Blog, error) {
 	return &a, nil
 }
 
-// func storeActivity(activityType string, activity Activity) (*StoredActivity, error) {
-// 	log.Println("Store activtity - 1")
-
-// 	var storedActivity *StoredActivity
-// 	log.Println("Store activtity - 2")
-// 	var act *StoredActivity
-// 	log.Println("Store activtity - 3")
-
-// 	activity = activity.SetUUID(activity.GetUUID())
-// 	// activityID := bson.NewObjectId()
-
-// 	storedActivity.ActivityType = activityType
-// 	storedActivity.Activity = activity
-// 	storedActivity.ID = uid
-
-// 	log.Println("Store activtity - 4")
-// 	activities := client.Collection("activities")
-// 	log.Println("Store activtity - 5")
-// 	doc := activities.Doc(uid)
-// 	log.Println("Store activtity - 6")
-// 	log.Printf("activity: %s", storedActivity)
-// 	log.Println("Store activtity - 7")
-
-// 	log.Printf("doc: %s", doc)
-// 	log.Println("Store activtity - 8")
-// 	_, err = doc.Create(ctx, storedActivity)
-// 	log.Println("Store activtity - 9")
-
-// 	if err != nil {
-// 		log.Fatalf("Failed adding document: %v", err)
-// 		return act, err
-// 	}
-
-// 	return storedActivity, nil
-// }
 
 func storeActivity(activityType string, activity Activity) (*Activity, error) {
 	activities := client.Collection("activities")
@@ -209,7 +173,7 @@ func updateActivity(activity Activity) (*Activity, error) {
 
 	_, err := doc.Set(ctx, activity)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	return &activity, nil
 
