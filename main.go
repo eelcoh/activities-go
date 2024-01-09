@@ -18,6 +18,7 @@ var db_name string
 
 var signingKey string
 var passphrase string
+var projectid string
 
 var ctx context.Context
 var client *firestore.Client
@@ -26,20 +27,24 @@ func init() {
 
 	fmt.Println("initialising firestore")
 
-	var err error
-
-	ctx := context.Background()
-	client, err = firestore.NewClient(ctx, "\"Filled in at lab startup\"")
-	if err != nil {
-		log.Fatalf("Error initializing Cloud Firestore client: %v", err)
-	}
-	defer client.Close()
+	// defer client.Close()
 
 	fmt.Println("initialising environment variables")
 
 	signingKey = os.Getenv("SIGNINGKEY")
 
 	passphrase = os.Getenv("PASSPHRASE")
+
+	var err error
+
+	projectid = os.Getenv("PROJECTID")
+
+	ctx = context.Background()
+
+	client, err = firestore.NewClient(ctx, projectid)
+	if err != nil {
+		log.Fatalf("Error initializing Cloud Firestore client: %v", err)
+	}
 
 }
 

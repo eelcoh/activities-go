@@ -16,9 +16,9 @@ type Activity interface {
 }
 
 type MetaData struct {
-	Date   int64  `json:"date"`
-	Active bool   `json:"active"`
-	UUID   string `json:"uuid"`
+	Date   int64  `firestore:"date" json:"date"`
+	Active bool   `firestore:"active" json:"active"`
+	UUID   string `firestore:"uuid" json:"uuid"`
 }
 
 type CommentMsg struct {
@@ -31,10 +31,10 @@ type PlainComment struct {
 }
 
 type Comment struct {
-	Author       string   `json:"author"`
-	Msg          []string `json:"msg"`
-	Meta         MetaData `json:"meta"`
-	ActivityType string   `json:"type"`
+	Author       string   `firestore:"author" json:"author"`
+	Msg          []string `firestore:"msg" json:"msg"`
+	Meta         MetaData `firestore:"meta" json:"meta"`
+	ActivityType string   `firestore:"type" json:"type"`
 }
 
 type Activities struct {

@@ -9,44 +9,47 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-func getActivtities(ctx context.Context) ([]StoredActivity, error) {
-	log.Println("Get activtities - 1")
+func getActivtities(ctx context.Context) ([]Activity, error) {
 
-	activities := client.Collection("Activities")
-	log.Println("Get activtities - 2")
+	activities := client.Collection("activities")
 	iter := activities.Documents(ctx)
-	log.Println("Get activtities - 3")
 
-	var a StoredActivity
-	log.Println("Get activtities - 4")
-	var newActivities []StoredActivity
+	var m map[string]interface{}
+
+	newActivities := make([]Activity, 0)
 	for {
 		doc, err := iter.Next()
-		log.Println("Get activtities - 5")
 		if err == iterator.Done {
 			break
 		}
 		if err != nil {
+			log.Printf("Get activtities ERR-1 %s", err)
 			return nil, err
 		}
 
-		err = doc.DataTo(&a)
-		log.Println("Get activtities - 6")
+		m = doc.Data()
+		if m["type"] == "comment" {
+			var c Comment
 
-		if err != nil {
-			return nil, err
+			err = doc.DataTo(&c)
+
+			if err != nil {
+				log.Printf("Get activtities ERR-2 %s", err)
+			} else {
+				newActivities = append(newActivities, c)
+			}
 		}
-		newActivities = append(newActivities, a)
 	}
-	return activities, nil
+
+	return newActivities, nil
 
 }
 
-func getActivity(ctx context.Context, uid string) (*StoredActivity, error) {
-	query := client.Collection("Activities").Where("meta.uuid", "==", uid)
+func getActivity(ctx context.Context, uid string) (*Activity, error) {
+	query := client.Collection("activities").Where("meta.uuid", "==", uid)
 	iter := query.Documents(ctx)
 
-	var a StoredActivity
+	var a Activity
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -64,66 +67,115 @@ func getActivity(ctx context.Context, uid string) (*StoredActivity, error) {
 	return &a, nil
 }
 
-func storeActivity(activityType string, activity Activity) (*StoredActivity, error) {
-	log.Println("Store activtity - 1")
+func getBlog(ctx context.Context, uid string) (*Blog, error) {
+	query := client.Collection("activities").Where("meta.uuid", "==", uid)
+	iter := query.Documents(ctx)
 
-	var storedActivity StoredActivity
-	log.Println("Store activtity - 2")
-	var act *StoredActivity
-	log.Println("Store activtity - 3")
+	var a Blog
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
 
-	uu, err := uuid.NewV4()
+		err = doc.DataTo(&a)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &a, nil
+}
+
+
+func storeActivity(activityType string, activity Activity) (*Activity, error) {
+	activities := client.Collection("activities")
+
+	doc := activities.Doc(activity.GetUUID())
+
+	_, err := doc.Create(ctx, activity)
 
 	if err != nil {
-		return act, err
+		log.Fatalf("Failed adding document: %v", err)
+		return nil, err
 	}
 
-	uid := uu.String()
+	return &activity, nil
+}
 
-	log.Println("Store activtity - 3a")
-	log.Printf(" activityType : %s", activity)
-	log.Println("Store activtity - 3aia")
-	storedActivity.Activity = activity
-
-	log.Println("Store activtity - 3b")
-	log.Printf(" activityType : %s", activityType)
-	log.Println("Store activtity - 3b")
-	log.Println("Store activtity - 3c")
-	storedActivity.ActivityType = activityType
-	log.Println("Store activtity - 3c")
-	activity = activity.SetUUID(uid)
-	log.Println("Store activtity - 3d")
-	storedActivity.ID = uid
-
-	log.Println("Store activtity - 4")
+func storeComment(activityType string, comment Comment) (*Comment, error) {
 	activities := client.Collection("activities")
-	log.Println("Store activtity - 5")
-	doc := activities.Doc(uid)
-	log.Println("Store activtity - 6")
 
-	_, err = doc.Create(ctx, storedActivity)
-	log.Println("Store activtity - 7")
+	doc := activities.Doc(comment.GetUUID())
+
+	_, err := doc.Create(ctx, comment)
+
+	if err != nil {
+		log.Fatalf("Failed adding document: %v", err)
+		return nil, err
+	}
+
+	return &comment, nil
+}
+
+func storeBlog(activityType string, blog Blog) (*Blog, error) {
+	var act *Blog
+	activities := client.Collection("activities")
+
+	doc := activities.Doc(blog.GetUUID())
+
+	_, err := doc.Create(ctx, blog)
 
 	if err != nil {
 		log.Fatalf("Failed adding document: %v", err)
 		return act, err
 	}
 
-	return &storedActivity, nil
+	return &blog, nil
 }
 
-func updateActivity(storedActivity *StoredActivity) (*StoredActivity, error) {
+func storeNewRanking(activityType string, ranking NewRanking) (*NewRanking, error) {
+	activities := client.Collection("activities")
 
-	var act StoredActivity
+	doc := activities.Doc(ranking.GetUUID())
+
+	_, err := doc.Create(ctx, ranking)
+
+	if err != nil {
+		log.Fatalf("Failed adding document: %v", err)
+		return nil, err
+	}
+
+	return &ranking, nil
+}
+
+func storeNewBet(activityType string, bet NewBet) (*NewBet, error) {
+	activities := client.Collection("activities")
+
+	doc := activities.Doc(bet.GetUUID())
+
+	_, err := doc.Create(ctx, bet)
+
+	if err != nil {
+		log.Fatalf("Failed adding document: %v", err)
+		return nil, err
+	}
+
+	return &bet, nil
+}
+
+func updateActivity(activity Activity) (*Activity, error) {
 
 	activities := client.Collection("activities")
-	doc := activities.Doc(storedActivity.ID)
+	doc := activities.Doc(activity.GetUUID())
 
-	_, err := doc.Set(ctx, storedActivity)
+	_, err := doc.Set(ctx, activity)
 	if err != nil {
-		return &act, nil
+		return nil, err
 	}
-	return storedActivity, nil
+	return &activity, nil
 
 }
 
