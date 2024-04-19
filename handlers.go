@@ -16,7 +16,7 @@ func health(w http.ResponseWriter, r *http.Request) {
 // activities ..
 func retrieveActivities(w http.ResponseWriter, r *http.Request) {
 
-	activities := []Activity{}
+	// activities := []Activity{}
 
 	var activitiesWrapper Activities
 
@@ -60,11 +60,13 @@ func retrieveActivity(w http.ResponseWriter, r *http.Request, activityType strin
 	if err != nil {
 		fmt.Println("whoops/404")
 		http.NotFound(w, r)
+		return
 	}
 
 	if activity == nil {
 		fmt.Println("whoops/404")
 		http.NotFound(w, r)
+		return
 	}
 
 	if (*activity).GetType() != activityType {
@@ -139,7 +141,7 @@ func newBlog(w http.ResponseWriter, r *http.Request) {
 	// storedBlog, err := storeActivity("blog", blog)
 	log.Println("Stored blog")
 
-	_, err = storeActivity("blog", blog)
+	_, err = storeActivity(blog)
 	if err != nil {
 		http.Error(w, err.Error(), 504)
 		return
@@ -245,7 +247,7 @@ func newComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = storeActivity("comment", comment)
+	_, err = storeActivity(comment)
 
 	if err != nil {
 		http.Error(w, err.Error(), 504)

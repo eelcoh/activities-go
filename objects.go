@@ -28,15 +28,47 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 		}
 
 		m = doc.Data()
-		if m["type"] == "comment" {
-			var c Comment
 
-			err = doc.DataTo(&c)
+		switch m["type"] {
+		case "comment":
+			var a Comment
+
+			err = doc.DataTo(&a)
 
 			if err != nil {
-				log.Printf("Get activtities ERR-2 %s", err)
+				log.Printf("Error parsing COMMENT %s : %s", m, err)
 			} else {
-				newActivities = append(newActivities, c)
+				newActivities = append(newActivities, a)
+			}
+		case "blog":
+			var a Blog
+
+			err = doc.DataTo(&a)
+
+			if err != nil {
+				log.Printf("Error parsing BLOG %s", err)
+			} else {
+				newActivities = append(newActivities, a)
+			}
+		case "new bet":
+			var a NewRanking
+
+			err = doc.DataTo(&a)
+
+			if err != nil {
+				log.Printf("Error parsing NEW BET %s", err)
+			} else {
+				newActivities = append(newActivities, a)
+			}
+		case "new ranking":
+			var a NewRanking
+
+			err = doc.DataTo(&a)
+
+			if err != nil {
+				log.Printf("Error parsing NEW RANKING %s", err)
+			} else {
+				newActivities = append(newActivities, a)
 			}
 		}
 	}
@@ -89,8 +121,7 @@ func getBlog(ctx context.Context, uid string) (*Blog, error) {
 	return &a, nil
 }
 
-
-func storeActivity(activityType string, activity Activity) (*Activity, error) {
+func storeActivity(activity Activity) (*Activity, error) {
 	activities := client.Collection("activities")
 
 	doc := activities.Doc(activity.GetUUID())
@@ -103,67 +134,6 @@ func storeActivity(activityType string, activity Activity) (*Activity, error) {
 	}
 
 	return &activity, nil
-}
-
-func storeComment(activityType string, comment Comment) (*Comment, error) {
-	activities := client.Collection("activities")
-
-	doc := activities.Doc(comment.GetUUID())
-
-	_, err := doc.Create(ctx, comment)
-
-	if err != nil {
-		log.Fatalf("Failed adding document: %v", err)
-		return nil, err
-	}
-
-	return &comment, nil
-}
-
-func storeBlog(activityType string, blog Blog) (*Blog, error) {
-	var act *Blog
-	activities := client.Collection("activities")
-
-	doc := activities.Doc(blog.GetUUID())
-
-	_, err := doc.Create(ctx, blog)
-
-	if err != nil {
-		log.Fatalf("Failed adding document: %v", err)
-		return act, err
-	}
-
-	return &blog, nil
-}
-
-func storeNewRanking(activityType string, ranking NewRanking) (*NewRanking, error) {
-	activities := client.Collection("activities")
-
-	doc := activities.Doc(ranking.GetUUID())
-
-	_, err := doc.Create(ctx, ranking)
-
-	if err != nil {
-		log.Fatalf("Failed adding document: %v", err)
-		return nil, err
-	}
-
-	return &ranking, nil
-}
-
-func storeNewBet(activityType string, bet NewBet) (*NewBet, error) {
-	activities := client.Collection("activities")
-
-	doc := activities.Doc(bet.GetUUID())
-
-	_, err := doc.Create(ctx, bet)
-
-	if err != nil {
-		log.Fatalf("Failed adding document: %v", err)
-		return nil, err
-	}
-
-	return &bet, nil
 }
 
 func updateActivity(activity Activity) (*Activity, error) {
