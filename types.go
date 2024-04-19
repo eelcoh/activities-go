@@ -84,11 +84,11 @@ type AuthenticatedBlog struct {
 }
 
 type Blog struct {
-	Author       string   `json:"author"`
-	Title        string   `json:"title"`
-	Msg          []string `json:"msg"`
-	Meta         MetaData `json:"meta"`
-	ActivityType string   `json:"type"`
+	Author       string   `firestore:"author" json:"author"`
+	Title        string   `firestore:"title" json:"title"`
+	Msg          []string `firestore:"msg" json:"msg"`
+	Meta         MetaData `firestore:"meta" json:"meta"`
+	ActivityType string   `firestore:"type" json:"type"`
 }
 
 func (b Blog) SetMetaData(meta MetaData) Activity {
@@ -123,10 +123,10 @@ func (b Blog) IsActive() bool {
 }
 
 type NewBet struct {
-	Name         string   `json:"name"`
-	UUID         string   `json:"uuid"`
-	Meta         MetaData `json:"meta"`
-	ActivityType string   `json:"type"`
+	Name         string   `firestore:"name" json:"name"`
+	UUID         string   `firestore:"uuid" json:"uuid"`
+	Meta         MetaData `firestore:"meta" json:"meta"`
+	ActivityType string   `firestore:"type" json:"type"`
 }
 
 func (b NewBet) SetMetaData(meta MetaData) Activity {
@@ -160,8 +160,8 @@ func (b NewBet) IsActive() bool {
 }
 
 type NewRanking struct {
-	Meta         MetaData `json:"meta"`
-	ActivityType string   `json:"type"`
+	Meta         MetaData `firestore:"meta" json:"meta"`
+	ActivityType string   `firestore:"type" json:"type"`
 }
 
 func (r NewRanking) SetMetaData(meta MetaData) Activity {
