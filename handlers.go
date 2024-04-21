@@ -16,11 +16,9 @@ func health(w http.ResponseWriter, r *http.Request) {
 // activities ..
 func retrieveActivities(w http.ResponseWriter, r *http.Request) {
 
-	activities := []Activity{}
-
 	var activitiesWrapper Activities
 
-	activities, err := getActivtities(ctx)
+	activities, err := getActivities(ctx)
 
 	if err != nil {
 		http.Error(w, "whoops - activities not found", 503)
@@ -65,6 +63,7 @@ func retrieveActivity(w http.ResponseWriter, r *http.Request, activityType strin
 	if activity == nil {
 		fmt.Println("whoops/404")
 		http.NotFound(w, r)
+		return
 	}
 
 	if (*activity).GetType() != activityType {

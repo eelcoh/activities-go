@@ -9,7 +9,7 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-func getActivtities(ctx context.Context) ([]Activity, error) {
+func getActivities(ctx context.Context) ([]Activity, error) {
 
 	activities := client.Collection("activities")
 	iter := activities.Documents(ctx)
@@ -23,7 +23,7 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 			break
 		}
 		if err != nil {
-			log.Printf("Get activtities ERR-1 %s", err)
+			log.Printf("Get activities ERR-1 - some error: %s", err)
 			return nil, err
 		}
 
@@ -34,7 +34,7 @@ func getActivtities(ctx context.Context) ([]Activity, error) {
 			err = doc.DataTo(&c)
 
 			if err != nil {
-				log.Printf("Get activtities ERR-2 %s", err)
+				log.Printf("Get actitities - casting error: ERR-2 %s", err)
 			} else {
 				newActivities = append(newActivities, c)
 			}
@@ -89,7 +89,6 @@ func getBlog(ctx context.Context, uid string) (*Blog, error) {
 	return &a, nil
 }
 
-
 func storeActivity(activityType string, activity Activity) (*Activity, error) {
 	activities := client.Collection("activities")
 
@@ -105,7 +104,7 @@ func storeActivity(activityType string, activity Activity) (*Activity, error) {
 	return &activity, nil
 }
 
-func storeComment(activityType string, comment Comment) (*Comment, error) {
+func storeComment(comment Comment) (*Comment, error) {
 	activities := client.Collection("activities")
 
 	doc := activities.Doc(comment.GetUUID())

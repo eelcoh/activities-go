@@ -38,6 +38,7 @@ func init() {
 	var err error
 
 	projectid = os.Getenv("PROJECTID")
+	log.Printf("Project id: %s", projectid)
 
 	ctx = context.Background()
 
