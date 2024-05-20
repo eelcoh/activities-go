@@ -5,13 +5,14 @@ import (
 	"log"
 	"time"
 
+	"cloud.google.com/go/firestore"
 	uuid "github.com/gofrs/uuid"
 	"google.golang.org/api/iterator"
 )
 
 func getActivtities(ctx context.Context) ([]Activity, error) {
 
-	activities := client.Collection("activities")
+	activities := client.Collection("activities").OrderBy("meta.date", firestore.Desc)
 	iter := activities.Documents(ctx)
 
 	var m map[string]interface{}
