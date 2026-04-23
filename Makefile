@@ -1,4 +1,4 @@
-.DEFAULT_GOAL := mac
+.DEFAULT_GOAL := local
 .PHONY: google
 
 # TAG=gokarna:5000/$(APP):$(VER)
@@ -14,7 +14,7 @@ google: pull tag push
 
 
 linux:
-	CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w' .
+	CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags '-w' -o activities ./cmd/activities
 
 docker:
 	# @echo $(TAG)
@@ -36,8 +36,7 @@ push:
 	docker push $(TAG)
 
 local:
-	go build
+	go build -o activities ./cmd/activities
 
 clean:
-	rm activities
-
+	rm -f activities
